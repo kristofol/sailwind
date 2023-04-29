@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Wind Speed Checher</title>
+  </head>
+  <body>
+    <h1>Kristof Wind Speed Checker</h1>
+    <p>Click the button below to check the current wind speed at your location:</p>
+    <button onclick="getLocation()">Get Wind Speed</button>
+    <p id="windSpeed"></p>
+    <script>
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+          alert("Geolocation is not supported by this browser.");
+        }
+      }
+
+      function showPosition(position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        const apiKey = "992c0dc1d95bb6d83e726266403d3b77";
+        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+
+        fetch(apiUrl)
+          .then(response => response.json())
+          .then(data => {
+            const windSpeed = data.wind.speed;
+            const windSpeedElement = document.getElementById("windSpeed");
+            windSpeedElement.innerHTML = `The current wind speed at your location is ${windSpeed} meters per second. Good luck with sailing.`;
+          })
+          .catch(error => {
+            alert("There was an error fetching the weather data.");
+            console.error(error);
+          });
+      }
+    </script>
+  </body>
+</html>
